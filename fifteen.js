@@ -1,87 +1,168 @@
 window.onload = function(){
-    setPieces();
+	addClasses();
+    layout();
     
-    //var movablePieces = $$("div#puzzlearea div.movablepiece");
-    //movablePieces.addEventListener("click", movePiece());
+    var s_button = $("shufflebutton");
+    $("shufflebutton").label = "Shuffle";
+    // s_button.addEventListener("click",function(){resetGame();},false);
+    s_button.addEventListener("click",function(){shuffle();},false);
     
-    for(var j = 0; j < allPieces.length; j++){
-        var pos = j;
-        if(allPieces[pos].classList.contains("movablepiece")){
-            movablePieces.push(allPieces[j]);
-        }
-    }
-    for(var k = 0; k < movablePieces.length; k++){
-        console.log(movablePieces[k]);
-        movablePieces[k].addEventListener("click", movePiece(movablePieces[k]));
-    }
+    // var top = "300px";
+    // var left = "300px";
+    // var allPieces = $$(".puzzlepiece");
+    
 };
 
-var allPieces;
-var movablePieces;// = $$("div#puzzlearea div.movablepiece");
+var y_correct = new Array();
+var x_correct = new Array();
+var y = "300px";
+var x = "300px";
 
-var space = "300px 300px";
+function addClasses(){
+	var allPieces = $$("div#puzzlearea div");
+	for (var i = 0; i < allPieces.length; i++){
+		allPieces[i].addClassName("puzzlepiece");
+        console.log(allPieces[i].classList);
+	}
+};
 
-var setPieces = function(){
+function layout(){
+    var allPieces = $$(".puzzlepiece");
     var l = 0;
     var t = 0;
-    var pieces = $$("div#puzzlearea div");
-    for (var i = 0; i < pieces.length; i++){
-        pieces[i].addClassName("puzzlepiece");
-        pieces[i].style.left = "" + (l*100) + "px";
-        pieces[i].style.top = "" + (t*100) + "px";
-        pieces[i].style.backgroundPosition = "-" + (l*100) + "px -" + (t*100) + "px";
-        //pieces[i].addClassName("movablepiece");
-        
-        if (l == 3){
+
+    for(var i = 0; i < allPieces.length; i++){
+        (function(){
+            var pos = i;
+            allPieces[pos].addEventListener("mouseover", function(){check(allPieces[pos])}, false);
+            allPieces[pos].addEventListener("mouseleave", function(){uncheck(allPieces[pos])}, false);
+            allPieces[pos].addEventListener("click", function(){move(allPieces[pos])}, false);
+        }());
+    }
+
+    for(var i = 0; i < allPieces.length; i++){
+        allPieces[i].style.left = (l*100) + "px";
+        x_correct.push(allPieces[i].style.left);
+        allPieces[i].style.top = (t*100) + "px";
+        y_correct.push(allPieces[i].style.top);
+        allPieces[i].style.backgroundPosition = "-" + (l*100) + "px -" + (t*100) + "px";
+        if (l === 3){
+            // allPieces[i].style.left = (l*100) + "px";
+            // allPieces[i].style.top = (t*100) + "px";
+            // allPieces[i].style.backgroundPosition = "-" + (l*100) + "px -" + (t*100) + "px";
             l = 0;
             t++;
+        }else if(l < 3){
+            // allPieces[i].style.left = (l*100) + "px";
+            // allPieces[i].style.top = (t*100) + "px";
+            l++;
+        }
+        console.log(i + " left: " + allPieces[i].style.left + ", top: " + allPieces[i].style.top);
+    }
+};
+
+function check(piece){
+    console.log("Entered the check function.");
+    console.log(piece.style.left + " " + piece.style.top + " vs " + x + " " + y);
+    if((piece.style.top === y && Math.abs(parseInt(piece.style.left, 10) - parseInt(x, 10)) === 100) || (piece.style.left === x && Math.abs(parseInt(piece.style.top, 10) - parseInt(y, 10)) === 100)){
+        console.log("Adding class.");
+        piece.addClassName("movablepiece");
+        return true;
+    }else{
+        return false;
+    }
+    
+
+    // var allPieces = $$(".puzzlepiece");
+    // for (var i = 0; i < allPieces.length; i++){
+    //     if(allPieces[i].style.top === top){
+    //         if(Math.abs(parseInt(allPieces[i].style.left) - parseInt(left)) === 100){
+    //             allPieces[i].addClassName("movablepiece");
+    //         }else{
+    //             allPieces[i].removeClassName("movablepiece");
+    //         }
+    //     }else if(allPieces[i].style.left === left){
+    //         if(Math.abs(parseInt(allPieces[i].style.top) - parseInt(top)) === 100){
+    //             allPieces[i].addClassName("movablepiece");
+    //         }else{
+    //             allPieces[i].removeClassName("movablepiece");
+    //         }
+    //     }
+    // }
+};
+
+function uncheck(piece){
+    console.log("Entered the uncheck function.");
+    piece.removeClassName("movablepiece");
+};
+
+function move(piece){
+    console.log("Entered the move function.");
+    var x_temp = piece.style.left;
+    var y_temp = piece.style.top;
+    if(piece.classList.contains("movablepiece")){
+        console.log("Moving piece.")
+        piece.style.left = x;
+        piece.style.top = y;
+        x = x_temp;
+        y = y_temp;
+    }
+    victory();
+};
+
+function victory(){
+    var allPieces = $$(".puzzlepiece");
+    var correct = false;
+    for (var i = 0; i < allPieces.length; i++){
+        if(allPieces[i].style.left === x_correct[i] && allPieces[i].style.top === y_correct[i]){
+            correct = true;
         }else{
-            l++;            
-        }
-        
-        //console.log(pieces[i].style.position);
-        //console.log(pieces[i].style.top);
-        //console.log(pieces[i].style.backgroundPosition);
+            correct = false;
+            break;
+        }        
     }
-    allPieces = pieces;
-    movable();
-};
 
-var spaceTop = "300px";
-var spaceLeft = "300px";
-
-var movable = function(){
-    var pieces = allPieces;
-    for (var j = 0; j < pieces.length; j++){
-        if(pieces[j].style.top === spaceTop){
-           if(Math.abs(parseInt(pieces[j].style.left, 10) - parseInt(spaceLeft, 10)) === 100){
-               pieces[j].addClassName("movablepiece");
-           }
+    if(correct){
+        console.log("Puzzle solved.");
+        for (var j = 0; j < allPieces.length; j++){
+            $("puzzlearea").replace("Congratulations! You've solved it!");
+            $("shufflebutton").label = "Restart Game";
         }
-        
-        if(pieces[j].style.left === spaceLeft){
-            if(Math.abs(parseInt(pieces[j].style.top, 10) - parseInt(spaceTop, 10)) === 100){
-                pieces[j].addClassName("movablepiece");
-            }
-        }
-        //pieces[j].addClassName("movablepiece");
     }
-    //movablePieces = $$("div#puzzlearea div.movablepiece");
-    allPieces = pieces;
+    else{
+        console.log("Puzzle not solved.");
+    }
 };
 
-var movePiece = function(piece){
+function shuffle(){
+    console.log("Shuffling.");
+    var allPieces = $$(".puzzlepiece");
+
+    for(var i = 0; i < 1000; i++){
+        var choice = Math.floor(Math.random() * 15) + 0;
+        if (check(allPieces[choice])){
+            move(allPieces[choice]);
+        }
+    }
     
-    var tempTop = piece.style.top;
-    var tempLeft = piece.style.left;
+    // for(var i = 0; i < allPieces.length; i++){
+    //     check(allPieces[i]);
+    // }
     
-    //if(piece.classList.contains("movablepiece")){
-    piece.style.top = spaceTop;
-    piece.style.left = spaceLeft;
-    spaceTop = tempTop;
-    spaceLeft = tempLeft;
-    //}
-    
-    movable();
+    // choices = $$(".movablepiece");
+
+    // for(var j = 0; j < 50; j++){
+    //     move(allPieces[Math.floor(Math.random() * 15) + 0]);
+    // }
+
+    console.log("Finished Shuffling.");
 };
 
+// function resetGame(){
+//     if ($("shufflebutton").label === "Restart Game"){
+//         location.reload();
+//         shuffle();
+//     }else{
+//         shuffle();    
+//     }
+// };
