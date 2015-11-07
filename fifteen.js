@@ -3,8 +3,8 @@ window.onload = function(){
     layout();
     
     var s_button = $("shufflebutton");
-    $("shufflebutton").label = "Shuffle";
-    // s_button.addEventListener("click",function(){resetGame();},false);
+    //$("shufflebutton").label = "Shuffle";
+    //s_button.addEventListener("click",function(){resetGame();},false);
     s_button.addEventListener("click",function(){shuffle();},false);
     
     // var top = "300px";
@@ -22,7 +22,7 @@ function addClasses(){
 	var allPieces = $$("div#puzzlearea div");
 	for (var i = 0; i < allPieces.length; i++){
 		allPieces[i].addClassName("puzzlepiece");
-        console.log(allPieces[i].classList);
+        // console.log(allPieces[i].classList);
 	}
 };
 
@@ -57,15 +57,16 @@ function layout(){
             // allPieces[i].style.top = (t*100) + "px";
             l++;
         }
-        console.log(i + " left: " + allPieces[i].style.left + ", top: " + allPieces[i].style.top);
+        // console.log(i + " left: " + allPieces[i].style.left + ", top: " + allPieces[i].style.top);
     }
+    shuffle();
 };
 
 function check(piece){
-    console.log("Entered the check function.");
-    console.log(piece.style.left + " " + piece.style.top + " vs " + x + " " + y);
+    // console.log("Entered the check function.");
+    // console.log(piece.style.left + " " + piece.style.top + " vs " + x + " " + y);
     if((piece.style.top === y && Math.abs(parseInt(piece.style.left, 10) - parseInt(x, 10)) === 100) || (piece.style.left === x && Math.abs(parseInt(piece.style.top, 10) - parseInt(y, 10)) === 100)){
-        console.log("Adding class.");
+        // console.log("Adding class.");
         piece.addClassName("movablepiece");
         return true;
     }else{
@@ -92,16 +93,19 @@ function check(piece){
 };
 
 function uncheck(piece){
-    console.log("Entered the uncheck function.");
-    piece.removeClassName("movablepiece");
-};
+    // console.log("Entered the uncheck function.");
+    if (piece.classList.contains("movablepiece")){
+        piece.removeClassName("movablepiece");
+    }
+}; 
+    
 
 function move(piece){
-    console.log("Entered the move function.");
+    // console.log("Entered the move function.");
     var x_temp = piece.style.left;
     var y_temp = piece.style.top;
     if(piece.classList.contains("movablepiece")){
-        console.log("Moving piece.")
+        // console.log("Moving piece.")
         piece.style.left = x;
         piece.style.top = y;
         x = x_temp;
@@ -123,25 +127,26 @@ function victory(){
     }
 
     if(correct){
-        console.log("Puzzle solved.");
-        for (var j = 0; j < allPieces.length; j++){
-            $("puzzlearea").replace("Congratulations! You've solved it!");
-            $("shufflebutton").label = "Restart Game";
-        }
+        // console.log("Puzzle solved.");
+        $("puzzlearea").replace("Congratulations! You've solved it!");
+        alert("Great Job!");
+        setTimeout(reset, 2500);
+        // location.reload();
     }
-    else{
-        console.log("Puzzle not solved.");
-    }
+    // else{
+    //             console.log("Puzzle not solved.");
+    // }
 };
 
 function shuffle(){
-    console.log("Shuffling.");
+    // console.log("Shuffling.");
     var allPieces = $$(".puzzlepiece");
 
-    for(var i = 0; i < 1000; i++){
+    for(var i = 0; i < 500; i++){
         var choice = Math.floor(Math.random() * 15) + 0;
         if (check(allPieces[choice])){
             move(allPieces[choice]);
+            uncheck(allPieces[choice]);
         }
     }
     
@@ -155,14 +160,17 @@ function shuffle(){
     //     move(allPieces[Math.floor(Math.random() * 15) + 0]);
     // }
 
-    console.log("Finished Shuffling.");
+    // console.log("Finished Shuffling.");
 };
+
+function reset(){
+    alert("Setting up a new game...");
+    location.reload();
+}
 
 // function resetGame(){
 //     if ($("shufflebutton").label === "Restart Game"){
-//         location.reload();
-//         shuffle();
-//     }else{
-//         shuffle();    
-//     }
+//         location.reload();   
+//     }    
+//     shuffle();
 // };
