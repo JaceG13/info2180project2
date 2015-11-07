@@ -59,7 +59,7 @@ function layout(){
         }
         // console.log(i + " left: " + allPieces[i].style.left + ", top: " + allPieces[i].style.top);
     }
-    shuffle();
+    // shuffle();
 }
 
 function check(piece){
