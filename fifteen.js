@@ -13,8 +13,8 @@ window.onload = function(){
     
 };
 
-var y_correct = new Array();
-var x_correct = new Array();
+var y_correct = [];
+var x_correct = [];
 var y = "300px";
 var x = "300px";
 
@@ -24,7 +24,7 @@ function addClasses(){
 		allPieces[i].addClassName("puzzlepiece");
         // console.log(allPieces[i].classList);
 	}
-};
+}
 
 function layout(){
     var allPieces = $$(".puzzlepiece");
@@ -34,9 +34,9 @@ function layout(){
     for(var i = 0; i < allPieces.length; i++){
         (function(){
             var pos = i;
-            allPieces[pos].addEventListener("mouseover", function(){check(allPieces[pos])}, false);
-            allPieces[pos].addEventListener("mouseleave", function(){uncheck(allPieces[pos])}, false);
-            allPieces[pos].addEventListener("click", function(){move(allPieces[pos])}, false);
+            allPieces[pos].addEventListener("mouseover", function(){check(allPieces[pos]);}, false);
+            allPieces[pos].addEventListener("mouseleave", function(){uncheck(allPieces[pos]);}, false);
+            allPieces[pos].addEventListener("click", function(){move(allPieces[pos]);}, false);
         }());
     }
 
@@ -60,7 +60,7 @@ function layout(){
         // console.log(i + " left: " + allPieces[i].style.left + ", top: " + allPieces[i].style.top);
     }
     shuffle();
-};
+}
 
 function check(piece){
     // console.log("Entered the check function.");
@@ -90,14 +90,14 @@ function check(piece){
     //         }
     //     }
     // }
-};
+}
 
 function uncheck(piece){
     // console.log("Entered the uncheck function.");
     if (piece.classList.contains("movablepiece")){
         piece.removeClassName("movablepiece");
     }
-}; 
+}
     
 
 function move(piece){
@@ -112,7 +112,7 @@ function move(piece){
         y = y_temp;
     }
     victory();
-};
+}
 
 function victory(){
     var allPieces = $$(".puzzlepiece");
@@ -136,7 +136,7 @@ function victory(){
     // else{
     //             console.log("Puzzle not solved.");
     // }
-};
+}
 
 function shuffle(){
     // console.log("Shuffling.");
@@ -161,7 +161,7 @@ function shuffle(){
     // }
 
     // console.log("Finished Shuffling.");
-};
+}
 
 function reset(){
     alert("Setting up a new game...");
